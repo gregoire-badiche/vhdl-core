@@ -23,6 +23,7 @@ architecture impl of tb_proc_f2 is
     signal SR_OUT_L : std_logic;
     signal SR_OUT_R : std_logic;
 
+    signal res_available : std_logic;
     signal instr_load : unsigned(7 downto 0);
 
 begin
@@ -45,6 +46,7 @@ begin
 
         RES_OUT => RES_OUT,
 
+        res_available => res_available,
         instr_load => instr_load
     );
 
@@ -53,11 +55,11 @@ begin
 
     clock_proc : process
     begin
-        for a in 0 to 2**4-1 loop
-            for b in 0 to 2**4-1 loop
+        for a in -2**3 to 2**3-1 loop
+            for b in -2**3 to 2**3-1 loop
                 rst <= '1';
-                A_IN <= std_logic_vector(to_unsigned(a, 4));
-                B_IN <= std_logic_vector(to_unsigned(b, 4));
+                A_IN <= std_logic_vector(to_signed(a, 4));
+                B_IN <= std_logic_vector(to_signed(b, 4));
                 SR_IN_L <= '0';
                 SR_IN_R <= '0';
                 clk <= '0';
@@ -69,9 +71,9 @@ begin
                     clk <= '1';
                     wait for PERIOD/2;
                 end loop;
-                assert (res_out(3 downto 0) = (std_logic_vector(unsigned(A_IN) + unsigned(B_IN)) xnor A_IN))
+                assert (res_out(3 downto 0) = (std_logic_vector(signed(A_IN) + signed(B_IN)) xnor A_IN))
                 report "res_out=" & to_string(res_out(3 downto 0)) &
-                    " | expected=" & to_string(std_logic_vector(unsigned(A_IN) + unsigned(B_IN)) xnor A_IN)
+                    " | expected=" & to_string(std_logic_vector(signed(A_IN) + signed(B_IN)) xnor A_IN)
                 severity error;
                 wait for 2*PERIOD;
             end loop;

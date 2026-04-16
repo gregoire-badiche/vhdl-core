@@ -23,6 +23,7 @@ architecture impl of tb_proc_f1 is
     signal SR_OUT_L : std_logic;
     signal SR_OUT_R : std_logic;
 
+    signal res_available : std_logic;
     signal instr_load : unsigned(7 downto 0);
 
 begin
@@ -45,6 +46,7 @@ begin
 
         RES_OUT => RES_OUT,
 
+        res_available => res_available,
         instr_load => instr_load
     );
 

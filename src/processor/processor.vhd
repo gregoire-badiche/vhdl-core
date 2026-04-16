@@ -19,6 +19,7 @@ port (
     RES_OUT : out std_logic_vector(N-1 downto 0);
     SR_OUT_L : out std_logic;
     SR_OUT_R : out std_logic;
+    res_available : out std_logic;
 
     instr_load : in unsigned(7 downto 0)
 );
@@ -34,7 +35,7 @@ begin
     port map (
         clk => clk,
         rst => rst,
-        en => '1',
+        en => en,
         instr_load => instr_load,
         instr_out => instr
     );
@@ -46,6 +47,7 @@ begin
     port map (
         clk => clk,
         rst => rst,
+        en => en,
         SR_IN_L => SR_IN_L,
         SR_IN_R => SR_IN_R,
         A_IN => A_IN,
@@ -53,6 +55,7 @@ begin
         INSTR_IN => instr,
         RES_OUT => RES_OUT,
         SR_OUT_L => SR_OUT_L,
-        SR_OUT_R => SR_OUT_R
+        SR_OUT_R => SR_OUT_R,
+        res_available => res_available
     );
 end architecture;

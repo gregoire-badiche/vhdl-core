@@ -23,6 +23,7 @@ architecture impl of tb_proc_f3 is
     signal SR_OUT_L : std_logic;
     signal SR_OUT_R : std_logic;
 
+    signal res_available : std_logic;
     signal instr_load : unsigned(7 downto 0);
 
 begin
@@ -45,6 +46,7 @@ begin
 
         RES_OUT => RES_OUT,
 
+        res_available => res_available,
         instr_load => instr_load
     );
 
@@ -56,8 +58,8 @@ begin
         for a in 0 to 3 loop
             for b in 0 to 3 loop
                 rst <= '1';
-                A_IN <= std_logic_vector(to_unsigned(a, 4));
-                B_IN <= std_logic_vector(to_unsigned(b, 4));
+                A_IN <= std_logic_vector(to_signed(a, 4));
+                B_IN <= std_logic_vector(to_signed(b, 4));
                 SR_IN_L <= '0';
                 SR_IN_R <= '0';
                 clk <= '0';

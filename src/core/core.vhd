@@ -9,6 +9,7 @@ entity core is
     port (
         clk : in std_logic;
         rst : in std_logic;
+        en : in std_logic;
         SR_IN_L : in std_logic;
         SR_IN_R : in std_logic;
         A_IN : in std_logic_vector((N/2)-1 downto 0);
@@ -18,7 +19,8 @@ entity core is
 
         RES_OUT : out std_logic_vector(N-1 downto 0);
         SR_OUT_L : out std_logic;
-        SR_OUT_R : out std_logic
+        SR_OUT_R : out std_logic;
+        res_available : out std_logic
     );
 end core;
 
@@ -172,14 +174,19 @@ begin
         case mem_sel_out_out is
             when "00" =>
                 RES_OUT <= (others => '0');
+                res_available <= '0';
             when "01" =>
                 RES_OUT <= mem_cache_1_out;
+                res_available <= '1';
             when "10" =>
                 RES_OUT <= mem_cache_2_out;
+                res_available <= '1';
             when "11" =>
                 RES_OUT <= S;
+                res_available <= '1';
             when others =>
                 RES_OUT <= (others => '0');
+                res_available <= '0';
         end case;
         -- end if;
     end process;
@@ -195,58 +202,60 @@ begin
         mem_cache_2_in <= (others => '0');
         mem_cache_2_en <= '0';
 
-        case SEL_ROUTE is
-            when "0000" =>
-                buff_a_in <= A_IN;
-                buff_a_en <= '1';
-            when "0001" =>
-                buff_b_in <= B_IN;
-                buff_b_en <= '1';
-            when "0010" =>
-                buff_a_in <= S((N/2)-1 downto 0);
-                buff_a_en <= '1';
-            when "0011" =>
-                buff_a_in <= S(N-1 downto (N/2));
-                buff_a_en <= '1';
-            when "0100" =>
-                buff_b_in <= S((N/2)-1 downto 0);
-                buff_b_en <= '1';
-            when "0101" =>
-                buff_b_in <= S(N-1 downto (N/2));
-                buff_b_en <= '1';
-            when "0110" =>
-                mem_cache_1_in <= S;
-                mem_cache_1_en <= '1';
-            when "0111" =>
-                mem_cache_2_in <= S;
-                mem_cache_2_en <= '1';
-            when "1000" =>
-                buff_a_in <= mem_cache_1_out((N/2)-1 downto 0);
-                buff_a_en <= '1';
-            when "1001" =>
-                buff_a_in <= mem_cache_1_out(N-1 downto (N/2));
-                buff_a_en <= '1';
-            when "1010" =>
-                buff_b_in <= mem_cache_1_out((N/2)-1 downto 0);
-                buff_b_en <= '1';
-            when "1011" =>
-                buff_b_in <= mem_cache_1_out(N-1 downto (N/2));
-                buff_b_en <= '1';
-            when "1100" =>
-                buff_a_in <= mem_cache_2_out((N/2)-1 downto 0);
-                buff_a_en <= '1';
-            when "1101" =>
-                buff_a_in <= mem_cache_2_out(N-1 downto (N/2));
-                buff_a_en <= '1';
-            when "1110" =>
-                buff_b_in <= mem_cache_2_out((N/2)-1 downto 0);
-                buff_b_en <= '1';
-            when "1111" =>
-                buff_b_in <= mem_cache_2_out(N-1 downto (N/2));
-                buff_b_en <= '1';
-            when others =>
-                null;
-        end case;
+        if en = '1' then
+            case SEL_ROUTE is
+                when "0000" =>
+                    buff_a_in <= A_IN;
+                    buff_a_en <= '1';
+                when "0001" =>
+                    buff_b_in <= B_IN;
+                    buff_b_en <= '1';
+                when "0010" =>
+                    buff_a_in <= S((N/2)-1 downto 0);
+                    buff_a_en <= '1';
+                when "0011" =>
+                    buff_a_in <= S(N-1 downto (N/2));
+                    buff_a_en <= '1';
+                when "0100" =>
+                    buff_b_in <= S((N/2)-1 downto 0);
+                    buff_b_en <= '1';
+                when "0101" =>
+                    buff_b_in <= S(N-1 downto (N/2));
+                    buff_b_en <= '1';
+                when "0110" =>
+                    mem_cache_1_in <= S;
+                    mem_cache_1_en <= '1';
+                when "0111" =>
+                    mem_cache_2_in <= S;
+                    mem_cache_2_en <= '1';
+                when "1000" =>
+                    buff_a_in <= mem_cache_1_out((N/2)-1 downto 0);
+                    buff_a_en <= '1';
+                when "1001" =>
+                    buff_a_in <= mem_cache_1_out(N-1 downto (N/2));
+                    buff_a_en <= '1';
+                when "1010" =>
+                    buff_b_in <= mem_cache_1_out((N/2)-1 downto 0);
+                    buff_b_en <= '1';
+                when "1011" =>
+                    buff_b_in <= mem_cache_1_out(N-1 downto (N/2));
+                    buff_b_en <= '1';
+                when "1100" =>
+                    buff_a_in <= mem_cache_2_out((N/2)-1 downto 0);
+                    buff_a_en <= '1';
+                when "1101" =>
+                    buff_a_in <= mem_cache_2_out(N-1 downto (N/2));
+                    buff_a_en <= '1';
+                when "1110" =>
+                    buff_b_in <= mem_cache_2_out((N/2)-1 downto 0);
+                    buff_b_en <= '1';
+                when "1111" =>
+                    buff_b_in <= mem_cache_2_out(N-1 downto (N/2));
+                    buff_b_en <= '1';
+                when others =>
+                    null;
+            end case;
+        end if;
     end process;
 
 end architecture;

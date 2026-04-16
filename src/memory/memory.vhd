@@ -39,8 +39,17 @@ architecture memory_arch of memory is
         12 =>   "0101100000", -- A <= M1    ; and
         13 =>   "0000001000", -- A <= S     ; nop
         14 =>   "0110111011", -- B <= M2    ; or
-        -- prng
-        15 =>   "0000000000",
+        -- prng : X^4 + X^3 + 1
+        15 =>   "0001000000", -- A <= A_IN  ; A
+        16 =>   "1100011000", -- M1 <= S    ; rshift A
+        17 =>   "1100001000", -- A <= S     ; rshift A
+        18 =>   "1100001000", -- A <= S     ; rshift A
+        19 =>   "0111010000", -- B <= S     ; xor
+        20 =>   "1111001000", -- A <= S     ; lshift B
+        21 =>   "1010010000", -- B <= S     ; sub       note : we CAN perform the sub here
+        22 =>   "0000001000", -- A <= S     ; nop
+        23 =>   "1111101000", -- B <= M1    ; lshift B
+        24 =>   "1001010011", -- B <= S     ; add
         others => (others => '0')
     );
 begin
@@ -49,7 +58,7 @@ begin
         if rst = '1' then
             current_instr <= instr_load + 1;
             instr_out <= mem(to_integer(instr_load));
-        elsif (falling_edge(clk) and  en = '1') then
+        elsif (falling_edge(clk) and en = '1') then
             current_instr <= current_instr + 1;
             instr_out <= mem(to_integer(current_instr));
         end if;
