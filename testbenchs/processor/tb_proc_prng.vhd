@@ -29,6 +29,8 @@ architecture impl of tb_proc_prng is
     -- signal is_setup : std_logic := '0';
     signal rand : std_logic_vector(3 downto 0) := (others => '0');
 
+    signal has_computed : std_logic := '0';
+
 begin
 
     processor : entity work.processor
@@ -79,13 +81,14 @@ begin
     main_proc : process(clk)
     begin
         if falling_edge(clk) then
-            if rst = '1' then
+            if rst = '1' and has_computed = '0' then
                 rst <= '0';
             end if;
             if res_available = '1' then
                 A_IN <= RES_OUT((N/2)-1 downto 0);
                 rand <= RES_OUT((N/2)-1 downto 0);
                 rst <= '1';
+                has_computed <= '1';
             end if;
         end if;
     end process;
