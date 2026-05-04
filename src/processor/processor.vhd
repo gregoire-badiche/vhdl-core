@@ -30,7 +30,7 @@ architecture processor_arch of processor is
 begin
     mem : entity work.memory
     generic map (
-        N_INSTR => 128
+        N_INSTR => 256
     )
     port map (
         clk => clk,

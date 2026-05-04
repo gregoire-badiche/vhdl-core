@@ -4,7 +4,7 @@ use IEEE.numeric_std.all;
 
 entity memory is
 generic (
-    N_INSTR : integer := 128
+    N_INSTR : integer := 256
 );
 port (
     clk : in std_logic;
@@ -53,7 +53,7 @@ architecture memory_arch of memory is
         others => (others => '0')
     );
 begin
-    process(clk, rst)
+    process(clk, rst, current_instr)
     begin
         if rst = '1' then
             current_instr <= instr_load + 1;

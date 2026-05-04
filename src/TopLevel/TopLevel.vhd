@@ -33,7 +33,7 @@ architecture Behavioral of Arty_Digilent_TopLevel is
     signal res_available : std_logic;
     signal instr_load : unsigned(7 downto 0) := to_unsigned(0, 8);
 
-    signal result : std_logic_vector(3 downto 0) := (others => '0');
+    signal result : std_logic_vector(7 downto 0) := (others => '0');
     signal res_available_mem : std_logic := '0';
 begin
 
@@ -63,7 +63,7 @@ begin
 
     btn_proc : process(CLK100MHZ)
     begin
-        if rising_edge(CLK100MHZ) then
+        if falling_edge(CLK100MHZ) then
             case btn is
                 when "0001" =>
                     rst <= '1';

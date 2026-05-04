@@ -38,7 +38,7 @@ elaborate: analyze
 # Simulation avec VCD
 sim: elaborate
 	@mkdir -p $(SIM_DIR)
-	cd $(BUILD_DIR) && $(GHDL) -r $(TB_NAME) --vcd=../$(VCD_FILE)
+	cd $(BUILD_DIR) && $(GHDL) -r $(TB_NAME) --stop-time=1us --vcd=../$(VCD_FILE)
 	@echo "Waveform générée : $(VCD_FILE)"
 
 # Nettoyage
