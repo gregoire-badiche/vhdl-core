@@ -9,22 +9,18 @@ architecture Behavioral of tb_prng is
     constant CLK_PERIOD : time := 50 ns;
     -- Signals
     signal CLK100MHZ : STD_LOGIC := '0';
-    signal n : std_logic := '0';
     signal rand : std_logic_vector(3 downto 0);
-    signal res_available : std_logic;
-    signal rst2 : std_logic;
+    signal rst : std_logic := '0';
 begin
 
     -- Instantiate DUT
     prng: entity work.PRNG
         port map (
             clk => CLK100MHZ,
-            rst => rst2,
+            rst => rst,
             en => '1',
-            compute_next => n,
             seed => "1101",
-            rand_out => rand,
-            res_available => res_available
+            rand => rand
         );
 
     -- Clock generation
@@ -38,86 +34,15 @@ begin
         end loop;
     end process;
 
-    -- Stimulus process
-    stim_proc : process
+    m : process
     begin
-        -- Initial wait
-        
-        wait for 1000 ns;
-
-        -- Test 3 : instruction 6
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        -- Test 3 : instruction 6
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        -- Test 3 : instruction 6
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        rst2 <= '1';
+        rst <= '1';
         wait for 110 ns;
-        rst2 <= '0';
-
-        wait for 1000 ns;
-
-        -- Test 3 : instruction 6
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        -- Test 3 : instruction 6
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        -- Test 3 : instruction 6
-        n <= '1';
-        wait for 50 ns;
-        n <= '0';
-
-        wait for 1000 ns;
-
-        -- Fin simulation
+        rst <= '0';
+        wait for 500 us;
+        rst <= '1';
+        wait for 110 ns;
+        rst <= '0';
         wait;
     end process;
 
