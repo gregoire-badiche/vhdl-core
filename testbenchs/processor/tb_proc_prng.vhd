@@ -81,7 +81,7 @@ begin
     main_proc : process(clk)
     begin
         if falling_edge(clk) then
-            if rst = '1' and has_computed = '0' then
+            if rst = '1' then
                 rst <= '0';
             end if;
             if res_available = '1' then

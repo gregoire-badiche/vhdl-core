@@ -3,16 +3,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity PRNG is
+    generic (
+        seed : std_logic_vector(3 downto 0) := "1011"
+    );
     port (
         clk : in std_logic;
-        rst : in std_logic;
-        en : in std_logic;
-        seed : in std_logic_vector(3 downto 0);
         rand : out std_logic_vector(3 downto 0)
     );
 end PRNG;
 
 architecture PRNG_arch of PRNG is
+
     constant N : integer := 8;
     signal A_IN : std_logic_vector(3 downto 0) := (others => '0');
     signal B_IN : std_logic_vector(3 downto 0) := (others => '0');
@@ -22,6 +23,8 @@ architecture PRNG_arch of PRNG is
     signal instr_load : unsigned(7 downto 0) := to_unsigned(15, 8);
     signal p_rst : std_logic := '1';
     signal res_available : std_logic;
+
+    signal started : std_logic := '0';
 begin
 
     processor : entity work.processor
@@ -31,7 +34,7 @@ begin
     port map (
         clk => clk,
         rst => p_rst,
-        en => en,
+        en => '1',
 
         A_IN => A_IN,
         B_IN => B_IN,
@@ -46,14 +49,15 @@ begin
         instr_load => instr_load
     );
 
-    main_proc : process(clk, rst)
+    main_proc : process(clk)
     begin
-        if rst = '1' then
+        if started = '0' then
             A_IN <= seed;
             rand <= seed;
             p_rst <= '1';
+            started <= '1';
         else
-            if falling_edge(clk) and en = '1' then
+            if falling_edge(clk) then
                 if p_rst = '1' then
                     p_rst <= '0';
                 end if;

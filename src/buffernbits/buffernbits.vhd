@@ -10,7 +10,7 @@ port (
     en : in std_logic;
     rst : in std_logic;
     e1 : in std_logic_vector (N-1 downto 0);
-    s1 : out std_logic_vector (N-1 downto 0)
+    s1 : out std_logic_vector (N-1 downto 0) := (others => '0')
 );
 end bufferNbits;
 
